@@ -1,27 +1,48 @@
-import json, socket
+import socket
+
 
 class User:
     'Used by the game server to keep track of its clients'
-    name = ""
-    connection, address = None, None
+
 
     def __init__(self, *args, **kwargs):
-        name = kwargs.get('name')
-        connection = kwargs.get('connection')
-        address = kwargs.get('address')
+        self.name = kwargs.get('name')
+        self.connection = kwargs.get('connection')
+        self.address = kwargs.get('address')
+
+
+    def __del__(self):
+        self.connection.close()
 
 
     def __str__(self):
-        print("name : " + str(self.name))
-        print("connection : " + str(self.connection))
-        print("address : " + str(self.address))
+        return ("name : " + str(self.name))
 
 
+    def __cmp__(self, other):
+        if not isinstance(other, User):
+            return False
+        return self.name == other.name and self.address == other.address
+
+
+    #Method to send a message to whatever User is connected to
+    #The return message should already be in the proper format
     def sendMessage(self, returnMessage):
         if self.connection == None:
-            raise UnboundLocalError("user connection not popluated")
+            raise UnboundLocalError("User connection not defined")
 
-        connection.sendall(json.dumps(returnMessage))
+        self.connection.sendall(returnMessage)
+
+
+    #blocking for now
+    def receiveMessage(self):
+        data = self.connection.receive(4096)
+        return data
+
+
+    def recieveMessageShared(self, dataDictionary):
+        data = self.connection.receive(4096)
+        dataDictionary[self.name] = data
 
 
 
