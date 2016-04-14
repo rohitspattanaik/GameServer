@@ -5,7 +5,7 @@ class User:
     'Used by the game server to keep track of its clients'
 
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         self.name = kwargs.get('name')
         self.connection = kwargs.get('connection')
         self.address = kwargs.get('address')

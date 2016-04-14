@@ -7,3 +7,5 @@ unknownRoomError = 200
 roomSocketError = 210
 duplicateUser = 220
 roomJsonError = 230
+incompleteJson = 235
+roomAtCapacity = 240
