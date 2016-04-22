@@ -45,4 +45,8 @@ class User:
         dataDictionary[self.name] = data
 
 
+    def close(self):
+        self.connection.close()
+
+
 

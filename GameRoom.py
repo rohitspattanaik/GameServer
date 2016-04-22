@@ -96,7 +96,19 @@ class GameRoom:
         return errorCodes.good
 
 
+    #Not sure if I'll need this. It's here just in case
+    def dropUser(self, user, message=""):
+        returnMessage = dict()
+        returnMessage["action"] = "drop"
+        returnMessage["message"] = message
+        user.sendMessage(json.dumps(returnMessage))
+        self.users.remove(user)
+        user.close()
+
+
+
     def connectUsers(self):
+        returnMessage = dict()
         hostConnected = False
         allConnected = False
 
@@ -110,7 +122,7 @@ class GameRoom:
                 self.generateErrorMessage("Error parsing json in room " + self.name)
                 return errorCodes.roomJsonError
 
-            if not self.checkKeys(data, ["action","type","roomName","name","numGuests"]):
+            if not self.checkKeys(data, ["action","type","roomName","name"]):
                 self.generateErrorMessage("Missing tags in json")
                 #TODO:notify user here?
                 return errorCodes.incompleteJson
@@ -133,6 +145,17 @@ class GameRoom:
                 #TODO: send message back that wrong room
                 continue
 
+            if data["type"] == "host":
+                if not self.checkKeys(data, "numGuests"):
+                    self.numberOfUsers = masterConfig.maxPlayers
+
+                else:
+                    if data["numGuests"] > masterConfig.maxPlayers or data["numGuests"] < 0:
+                        num = masterConfig.maxPlayers
+                    else:
+                        num = data["numGuests"] + 1
+                    self.numberOfUsers = num
+
 
             userArgs = dict()
             userArgs["name"] = data["name"]
@@ -145,11 +168,6 @@ class GameRoom:
                 continue
 
             if data["type"] == "host":
-                if data["numGuests"] > masterConfig.maxPlayers or data["numGuests"] < 0:
-                    num = masterConfig.maxPlayers
-                else:
-                    num = data["numGuests"] + 1
-                self.numberOfUsers = num
                 hostConnected = True
 
             if len(self.users) == self.numberOfUsers:
