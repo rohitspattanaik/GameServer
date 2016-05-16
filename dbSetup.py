@@ -97,3 +97,7 @@ def dbSetup():
     if not populateDatabase(file):
         print("\nFailed to populate database properly.")
     print("Database populated")
+
+
+#Run setup
+dbSetup()

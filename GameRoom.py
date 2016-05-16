@@ -173,4 +173,7 @@ class GameRoom:
             if len(self.users) == self.numberOfUsers:
                 allConnected = True
 
-            #TODO: add something to broadcast new user added so host can cut off
+            returnMessage.clear()
+            returnMessage["action"] = "update"
+            returnMessage["message"] = user.name + " connected"
+            self.messageRoom(json.dumps(returnMessage))

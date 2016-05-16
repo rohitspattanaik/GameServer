@@ -9,6 +9,7 @@ class User:
         self.name = kwargs.get('name')
         self.connection = kwargs.get('connection')
         self.address = kwargs.get('address')
+        self.id = 0; #TODO: generate ids
 
 
     def __del__(self):
