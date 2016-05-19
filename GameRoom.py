@@ -14,6 +14,10 @@ class GameRoom:
         self.users = []
         self.socket = socket()
         self.numberOfUsers = 1  # To accommodate host
+        if kwargs.has_key("gameType"):
+            self.gameType = kwargs["gameType"]
+        else:
+            self.gameType = "NULL"
 
 
     def __str__(self):
@@ -177,3 +181,10 @@ class GameRoom:
             returnMessage["action"] = "update"
             returnMessage["message"] = user.name + " connected"
             self.messageRoom(json.dumps(returnMessage))
+
+
+    def startGame(self):
+        if self.gameType == "tipOfMyTongue":
+            #TODO: start game
+            a = 0
+
