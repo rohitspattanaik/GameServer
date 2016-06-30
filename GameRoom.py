@@ -1,5 +1,5 @@
-import socket, json, string, random
-import masterConfig, errorCodes
+import socket, json, string, random, thread
+import masterConfig, errorCodes, User
 
 
 #should I have the room class keep track of all the rooms and the bindings, etc or delegate that to a 'lobby'...
@@ -12,6 +12,7 @@ class GameRoom:
     def __init__(self, **kwargs):
         self.name = ''
         self.users = []
+        self.ip = masterConfig.host
         self.socket = socket()
         self.numberOfUsers = 1  # To accommodate host
         if kwargs.has_key("gameType"):
@@ -48,7 +49,7 @@ class GameRoom:
     def bindSocket(self, roomPort):
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.bind((masterConfig.host, roomPort))
+            self.socket.bind((self.ip, roomPort))
         except socket.error as e:
             self.generateErrorMessage("Room " + self.name + " failed to bind socket")
             return errorCodes.roomSocketError
@@ -183,8 +184,13 @@ class GameRoom:
             self.messageRoom(json.dumps(returnMessage))
 
 
-    def startGame(self):
-        if self.gameType == "tipOfMyTongue":
-            #TODO: start game
-            a = 0
+    def getUserResponse(self):
+        returnData = dict()
+        for user in self.users:
+            thread.start_new_thread(user.recieveMessageShared, (returnData, ))
+        while len(returnData) != self.numberOfUsers:
+            #busy waiting
+            pass
+        return returnData
+
 

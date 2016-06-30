@@ -9,3 +9,7 @@ duplicateUser = 220
 roomJsonError = 230
 incompleteJson = 235
 roomAtCapacity = 240
+
+#WordGameDefinition errors: 300+
+
+gameRoomUnspecified = 310

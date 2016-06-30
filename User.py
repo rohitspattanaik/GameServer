@@ -5,11 +5,11 @@ class User:
     'Used by the game server to keep track of its clients'
 
 
-    def __init__(self, **kwargs):
+    def __init__(self,**kwargs):
         self.name = kwargs.get('name')
         self.connection = kwargs.get('connection')
         self.address = kwargs.get('address')
-        self.id = 0; #TODO: generate ids
+        self.id = kwargs.get('id') #TODO: generate ids
 
 
     def __del__(self):
@@ -23,7 +23,7 @@ class User:
     def __cmp__(self, other):
         if not isinstance(other, User):
             return False
-        return self.name == other.name and self.address == other.address
+        return self.id == other.id and self.address == other.address
 
 
     #Method to send a message to whatever User is connected to
@@ -43,7 +43,7 @@ class User:
 
     def recieveMessageShared(self, dataDictionary):
         data = self.connection.receive(4096)
-        dataDictionary[self.name] = data
+        dataDictionary[self.id] = data
 
 
     def close(self):
