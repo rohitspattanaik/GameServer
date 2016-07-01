@@ -13,17 +13,21 @@ class User:
 
 
     def __del__(self):
-        self.connection.close()
+        if self.connection != None:
+            self.connection.close()
 
 
     def __str__(self):
         return ("name : " + str(self.name))
 
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
         if not isinstance(other, User):
             return False
         return self.id == other.id and self.address == other.address
+
+    def __ne__(self, other):
+        return not self == other
 
 
     #Method to send a message to whatever User is connected to
